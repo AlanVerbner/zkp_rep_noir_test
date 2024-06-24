@@ -1,0 +1,12 @@
+[submodule "zkp_rep/noir-array-helpers"]
+	path = zkp_rep/noir-array-helpers
+	url = git@github.com:colinnielsen/noir-array-helpers.git
+[submodule "zkp_rep/ecrecover-noir"]
+	path = zkp_rep/ecrecover-noir
+	url = git@github.com:colinnielsen/ecrecover-noir.git
+[submodule "noir-array-helpers"]
+	path = noir-array-helpers
+	url = git@github.com:colinnielsen/noir-array-helpers.git
+[submodule "ecrecover-noir"]
+	path = ecrecover-noir
+	url = git@github.com:colinnielsen/ecrecover-noir.git
