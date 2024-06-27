@@ -11,36 +11,29 @@ const profileRootBinding = await proveAccountOwnership(
   ACCOUNTS.ROOT.account
 );
 
-const rootProfileBinding = await proveAccountOwnership(
-  ACCOUNTS.ROOT.pk,
-  ACCOUNTS.PROFILE.account
-);
-
 console.log(
-  `Prooving [${ACCOUNTS.ROOT.account.address} and ${ACCOUNTS.PROFILE.account.address} have the same owner`
-);
-console.log(`let hashed_message = [${profileRootBinding.hash}];`);
-console.log(
-  `let profile_pub_key = [${fromHex(
-    ACCOUNTS.PROFILE.account.publicKey,
-    "bytes"
-  )}`
-);
-console.log(
-  `let profile_pub_key = [${fromHex(
-    ACCOUNTS.ROOT.account.publicKey,
+  `let root_address_bytes = [${fromHex(
+    ACCOUNTS.ROOT.account.address,
     "bytes"
   )}];`
 );
-console.log(`let profile_signature = [${profileRootBinding.sig}];`);
+
 console.log(
   `let profile_address_hash = [${fromHex(
     keccak256(ACCOUNTS.PROFILE.account.address),
     "bytes"
   )}];`
 );
-console.log(`let root_signature = [${rootProfileBinding.sig}];`);
-console.log(`Root hashed message = [${rootProfileBinding.hash}];`);
+
+console.log(
+  `let profile_pub_key = [${fromHex(
+    ACCOUNTS.PROFILE.account.publicKey,
+    "bytes"
+  )}`
+);
+
+console.log(`let profile_signature = [${profileRootBinding.sig}];`);
+
 
 // Not a real w3c VC
 // const unsignedCred = {
