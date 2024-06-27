@@ -10,3 +10,6 @@
 [submodule "ecrecover-noir"]
 	path = ecrecover-noir
 	url = git@github.com:colinnielsen/ecrecover-noir.git
+[submodule "zk-kit.noir"]
+	path = zk-kit.noir
+	url = git@github.com:privacy-scaling-explorations/zk-kit.noir.git

@@ -1,32 +1,36 @@
 use dep::std;
 use dep::ecrecover;
 use dep::std::hash;
+use ecrecover::secp256k1::PubKey;
+
+type SignatureBytes = [u8; 64];
+type PubKeyArray = [u8; 64];
 
 fn main(
-    root_pub_key: pub [u8; 64],
-    profile_pub_key: [u8; 64],
-    sig_from_root: pub [u8; 64],
-    sig_from_profile: pub [u8; 64]
+    root_pub_key: pub PubKeyArray,
+    sig_from_root: pub SignatureBytes,
+    profile_pub_key: PubKeyArray,
+    profile_address_hash: pub [u8; 32],
+    sig_from_profile: SignatureBytes
 ) {
     let root_pub_key = ecrecover::secp256k1::PubKey::from_unified(root_pub_key);
     let root_address = root_pub_key.to_eth_address();
-    println(f"Root address: {root_address}");
-    
-    let profile_pub_key = ecrecover::secp256k1::PubKey::from_unified(profile_pub_key);
-
-    // Check if root address has been signed by the profile and recover profile address
     let root_address_bytes: [u8; 20] = root_address.to_be_bytes(20).as_array();
     let profile_hashed_message: [u8; 32] = std::hash::keccak256(root_address_bytes, 20);
-    println(f"Root address hash: {profile_hashed_message}");
+    println(f"Root address: {root_address}");
+
+    let profile_pub_key = PubKey::from_unified(profile_pub_key);
     let recovered_profile_address = profile_pub_key.ecrecover(sig_from_profile, profile_hashed_message);
-    // Check if the recovered signer (Profile) has been signed by the root 
+    println(f"Recovered profile address is {recovered_profile_address}");
     let profile_address_bytes: [u8; 20] = recovered_profile_address.to_be_bytes(20).as_array();
     println(f"Recovered profile address: {profile_address_bytes}");
     let root_hashed_message: [u8; 32] = std::hash::keccak256(profile_address_bytes, 20);
+    // Check if the recovered signer (Profile) has been signed by the root 
     println(f"Root hashed message {root_hashed_message}");
     let recovered_root_address = root_pub_key.ecrecover(sig_from_root, root_hashed_message);
     // Check if signer is the proper root address
-    assert(root_address == recovered_root_address);
+    assert(root_pub_key.to_eth_address() == recovered_root_address);
+    assert(std::hash::keccak256(profile_address_bytes, 20) == profile_address_hash);
 }
 
 #[test]
@@ -40,13 +44,15 @@ fn test_main() {
     let profile_signature = [
         108, 220, 41, 182, 246, 228, 35, 240, 189, 194, 208, 43, 38, 76, 26, 198, 19, 139, 61, 107, 169, 63, 57, 54, 114, 114, 213, 66, 143, 195, 178, 10, 61, 184, 151, 91, 219, 191, 105, 174, 195, 60, 86, 240, 80, 158, 28, 68, 35, 237, 104, 28, 140, 190, 81, 78, 177, 16, 249, 173, 17, 158, 36, 62
     ];
+    let profile_address_hash = [236,107,62,218,77,169,7,124,82,243,85,245,215,170,43,18,78,120,98,107,112,89,241,117,33,30,158,119,9,133,71,202];
     let root_signature = [
         181, 248, 103, 18, 63, 66, 6, 116, 99, 15, 4, 223, 199, 105, 32, 43, 164, 150, 147, 30, 41, 131, 199, 46, 62, 19, 223, 253, 10, 18, 249, 196, 106, 240, 73, 126, 67, 80, 7, 245, 82, 32, 221, 185, 122, 237, 47, 231, 78, 123, 88, 168, 168, 230, 38, 130, 254, 123, 255, 99, 195, 137, 145, 112
     ];
     main(
         root_pub_key,
-        profile_pub_key,
         root_signature,
+        profile_pub_key,
+        profile_address_hash,
         profile_signature
     );
 }

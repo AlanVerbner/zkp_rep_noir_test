@@ -1,4 +1,4 @@
-import { fromHex } from "viem";
+import { fromHex, keccak256, sha256 } from "viem";
 import { proveAccountOwnership } from "./common";
 import { ACCOUNTS } from "./consts";
 
@@ -17,24 +17,36 @@ const rootProfileBinding = await proveAccountOwnership(
 );
 
 console.log(
-  `Prooving ${ACCOUNTS.ROOT.account.address} and ${ACCOUNTS.PROFILE.account.address} have the same owner`
+  `Prooving [${ACCOUNTS.ROOT.account.address} and ${ACCOUNTS.PROFILE.account.address} have the same owner`
 );
-console.log(`let hashed_message = ${profileRootBinding.hash};`);
+console.log(`let hashed_message = [${profileRootBinding.hash}];`);
 console.log(
-  `let profile_pub_key = ${fromHex(ACCOUNTS.PROFILE.account.publicKey, "bytes")}`
+  `let profile_pub_key = [${fromHex(
+    ACCOUNTS.PROFILE.account.publicKey,
+    "bytes"
+  )}`
 );
 console.log(
-  `let root_pub_key = ${fromHex(ACCOUNTS.ROOT.account.publicKey, "bytes")}`
+  `let profile_pub_key = [${fromHex(
+    ACCOUNTS.ROOT.account.publicKey,
+    "bytes"
+  )}];`
 );
-console.log(`let profile_signature = ${profileRootBinding.sig}`);
-console.log(`let root_signature = ${rootProfileBinding.sig}`);
-console.log(`Root hashed message = ${rootProfileBinding.hash}`);
+console.log(`let profile_signature = [${profileRootBinding.sig}];`);
+console.log(
+  `let profile_address_hash = [${fromHex(
+    keccak256(ACCOUNTS.PROFILE.account.address),
+    "bytes"
+  )}];`
+);
+console.log(`let root_signature = [${rootProfileBinding.sig}];`);
+console.log(`Root hashed message = [${rootProfileBinding.hash}];`);
 
 // Not a real w3c VC
-const unsignedCred = {
-  repId: "English Skills",
-  value: "C1",
-};
+// const unsignedCred = {
+//   repId: "English Skills",
+//   value: "C1",
+// };
 
 // const message = JSON.stringify(unsignedCred);
 // const attesterAccount = privateKeyToAccount();
