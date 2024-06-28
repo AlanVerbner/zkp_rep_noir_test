@@ -1,5 +1,12 @@
-import { privateKeyToAccount } from "viem/accounts";
+import { privateKeyToAccount, type PrivateKeyAccount } from "viem/accounts";
 import type { Hex } from "./common";
+
+export type Account = {
+  pk: `0x${string}`;
+  account: PrivateKeyAccount;
+};
+
+export type AccountType = "ROOT" | "PROFILE";
 
 // Attention! The following keys are not supposed to be hardcoded, this is just a simple test
 const ATTESTER_PK: Hex =
@@ -12,7 +19,7 @@ const PROFILE_PK: Hex =
 const rootAccount = privateKeyToAccount(ROOT_IDENTITY_PK);
 const profileAccount = privateKeyToAccount(PROFILE_PK);
 
-export const ACCOUNTS = {
+export const ACCOUNTS: Record<AccountType, Account> = {
   ROOT: {
     pk: ROOT_IDENTITY_PK,
     account: rootAccount,

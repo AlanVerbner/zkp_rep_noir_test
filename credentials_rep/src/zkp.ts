@@ -4,7 +4,7 @@ import {
 	type ProofData,
 } from "@noir-lang/backend_barretenberg";
 import { Noir } from "@noir-lang/noir_js";
-import zkp_rep from "../zkp_rep/target/zkp_rep.json";
+import zkp_rep from "../../zkp_rep/target/zkp_rep.json";
 import { logger } from "./logger";
 
 const circuit = zkp_rep as CompiledCircuit;
@@ -25,6 +25,11 @@ export class ZKP {
   async initialize() {
     this.backend = new BarretenbergBackend(circuit);
     this.noir = new Noir(circuit, this.backend);
+  }
+
+  async destroy() {
+    await this.noir?.destroy()
+    await this.backend?.destroy()
   }
 
   async generateProof(witness: ProfileBindingWitness): Promise<ProofData> {
